@@ -1,10 +1,8 @@
 """
 This module contains prompts used for organizing and structuring extracted text.
 """
-
+# This prompt is used to guide an AI model in cleaning and structuring raw text extracted from an exam PDF into a JSON format.
 organize_text_prompt = """
-    This prompt is used to guide an AI model in cleaning and structuring raw text extracted from an exam PDF into a JSON format.
-
     You will receive raw text extracted from an exam PDF. The text may contain noise such as headers, page numbers, formatting artifacts, and repeated titles.
 
     Your task is to clean the content and convert it into structured JSON.
