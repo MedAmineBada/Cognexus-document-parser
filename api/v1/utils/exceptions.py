@@ -50,14 +50,7 @@ async def generic_exception_handler(request: Request, exc):
 
 async def custom_exception_handler(request: Request, exc):
     """Handles custom exceptions, returning the appropriate status and message."""
-    if isinstance(exc, CustomException):
-        return JSONResponse(
-            status_code=exc.status_code,
-            content={"error": exc.message},
-        )
-    else:
-        # All other errors
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"error": "Something went wrong."},
-        )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.message},
+    )

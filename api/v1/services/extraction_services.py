@@ -1,12 +1,16 @@
 """
 This module provides services for extracting and processing text from PDF files.
 """
+import base64
 import json
 
 import fitz
 from fastapi import UploadFile
+
 from api.v1.utils import clean_text, organize_text_prompt, extract_pages_from_document
 from api.v1.utils.exceptions import UnprocessableContent, CustomException
+from api.v1.utils.image_utils import upload_images
+from config import env
 
 
 async def extract_text(file: UploadFile) -> dict:
@@ -25,14 +29,10 @@ async def extract_text(file: UploadFile) -> dict:
 
     try:
         content = await file.read()
-    except Exception as e:
-        raise CustomException(message="Something went wrong: could not read the uploaded file.")
-
-    try:
         doc = fitz.open(stream=content, filetype="pdf")
 
     except Exception as e:
-        raise CustomException(message="Something went wrong: could not open the PDF.")
+        raise CustomException(message="Something went wrong: could not process the PDF.")
 
     pages = extract_pages_from_document(doc)
 
@@ -55,5 +55,35 @@ async def extract_text(file: UploadFile) -> dict:
 
     return cleaned_result
 
-async def extract_images(file: UploadFile):
-    pass
+
+async def extract_images(file: UploadFile, exam_id: int):
+    if not file.content_type == "application/pdf":
+        raise UnprocessableContent(message="file must be of type PDF.")
+    try:
+        content = await file.read()
+        doc = fitz.open(stream=content, filetype="pdf")
+    except Exception as e:
+        raise CustomException(message="Something went wrong: could not process the PDF.")
+
+    images = []
+
+    for page_num in range(len(doc)):
+        page = doc[page_num]
+        image_info_list = page.get_image_info(xrefs=True)
+        image_info_list.sort(key=lambda info: (info["bbox"][1], info["bbox"][0]))
+
+        for info in image_info_list:
+            xref = info["xref"]
+            if xref == 0:
+                continue
+            try:
+                base_image = doc.extract_image(xref)
+                images.append(
+                    base64.b64encode(base_image["image"]).decode("utf-8")
+                )
+
+            except Exception:
+                raise
+
+    doc.close()
+    return await upload_images(images, folder=f"{env.EXAM_FOLDER}/{exam_id}")

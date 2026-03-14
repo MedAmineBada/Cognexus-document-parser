@@ -24,7 +24,7 @@ async def clean_text(prompt: str):
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(
-                env.LLMORC_API,
+                env.EXGATE_LLM_URL,
                 json=payload
             )
 
@@ -84,7 +84,7 @@ def extract_pages_from_document(doc: fitz.Document):
                     image_counter += 1
                     page_content.append({
                         "type": "image_placeholder",
-                        "content": f"[IMAGE_{image_counter}]",
+                        "content": f"$IMGPHOLDER$[IMAGE_{image_counter}]",
                         "image_number": image_counter
                     })
 
@@ -98,3 +98,5 @@ def extract_pages_from_document(doc: fitz.Document):
         return pages
     except Exception as e:
         raise CustomException(message="Something went wrong: could not extract pages from the document.")
+
+from pathlib import PurePosixPath

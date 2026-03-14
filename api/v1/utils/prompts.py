@@ -15,7 +15,7 @@ organize_text_prompt = """
     - formatting artifacts
 
     Keep:
-    - images as placeholders if present (e.g., [IMAGE_1])
+    - images as placeholders if present (e.g., $IMGPHOLDER$[IMAGE_1])
     - the logical structure of exercises
 
     OUTPUT FORMAT

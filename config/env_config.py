@@ -8,8 +8,12 @@ class EnvFile(BaseSettings):
     """
     Defines the environment variables for the application.
     """
-    LLMORC_API: str
-    """The URL of the LLMORC API."""
+    EXGATE_LLM_URL: str
+    EXGATE_CLOUDINARY_URL: str
+
+    EXAM_FOLDER: str
+    CORRECTION_FOLDER: str
+
 
     class Config:
         """
@@ -17,5 +21,5 @@ class EnvFile(BaseSettings):
         """
         env_file = ".env"
 
-env = EnvFile()
 """An instance of the EnvFile class, providing access to the environment variables."""
+env = EnvFile()
