@@ -13,7 +13,7 @@ from api.v1.utils.image_utils import upload_images
 from config import env
 
 
-async def extract_text(file: UploadFile) -> dict:
+async def extract_content(file: UploadFile) -> dict:
     """
     Extracts text and images from a PDF file, structures the content,
     and sends it to an AI service for cleaning and organization.
@@ -63,6 +63,7 @@ async def extract_images(file: UploadFile, exam_id: int):
         content = await file.read()
         doc = fitz.open(stream=content, filetype="pdf")
     except Exception as e:
+        print(e)
         raise CustomException(message="Something went wrong: could not process the PDF.")
 
     images = []

@@ -2,27 +2,17 @@
 This module defines the API routes for text extraction.
 """
 from fastapi import APIRouter, UploadFile, File
-from fastapi.params import Form
+from fastapi.params import Form, Query
 from starlette import status
 
-from api.v1.services.extraction_services import extract_text, extract_images
-from api.v1.utils.exceptions import CustomException, NotFoundException
+from api.v1.services.extraction_services import extract_content, extract_images
 
 router = APIRouter()
 
 
-@router.post("/text", status_code=status.HTTP_200_OK)
-async def scan_text(file: UploadFile = File(...)):
-    """
-    Handles file uploads for text extraction.
-
-    Args:
-        file: The uploaded file.
-
-    Returns:
-        The extracted text.
-    """
-    return await extract_text(file)
+@router.post("/extract", status_code=status.HTTP_200_OK)
+async def extract(file: UploadFile = File(...)):
+    return await extract_content(file)
 
 
 @router.post("/images", status_code=status.HTTP_200_OK)
@@ -35,5 +25,7 @@ async def scan_image(file: UploadFile = File(...), exam_id: int = Form(...)):
 
     Returns:
         The extracted images.
+        :param file:
+        :param exam_id:
     """
     return await extract_images(file,exam_id)

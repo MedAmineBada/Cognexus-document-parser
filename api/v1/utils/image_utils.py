@@ -7,12 +7,12 @@ from api.v1.utils.exceptions import BadGatewayException, GatewayTimeoutException
 from config import env
 
 
-async def upload_images(images: List[str], folder: str):
+async def upload_images(files: List[str], folder: str):
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(
                 env.EXGATE_CLOUDINARY_URL,
-                json={"folder":folder, "images":images}
+                json={"folder":folder, "files":files}
             )
 
     except ConnectError:

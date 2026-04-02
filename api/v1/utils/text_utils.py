@@ -99,4 +99,3 @@ def extract_pages_from_document(doc: fitz.Document):
     except Exception as e:
         raise CustomException(message="Something went wrong: could not extract pages from the document.")
 
-from pathlib import PurePosixPath

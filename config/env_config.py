@@ -14,7 +14,6 @@ class EnvFile(BaseSettings):
     EXAM_FOLDER: str
     CORRECTION_FOLDER: str
 
-
     class Config:
         """
         Specifies the environment file to use.
