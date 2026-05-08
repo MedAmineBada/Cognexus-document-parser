@@ -1,14 +1,14 @@
 """
 Main application file for the Cognexus-TextX FastAPI service.
 """
-from contextlib import asynccontextmanager
+
 from http.client import HTTPException
 
 import uvicorn
 from fastapi import FastAPI
 
-from api.v1.v1_router import router
 from api.v1.utils.exceptions import custom_exception_handler, generic_exception_handler
+from api.v1.v1_router import router
 
 app = FastAPI(debug=False)
 
@@ -24,4 +24,3 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8012,
     )
-
