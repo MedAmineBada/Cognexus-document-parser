@@ -7,7 +7,7 @@ import base64
 import fitz
 from fastapi import UploadFile
 
-from api.v1.utils import UnprocessableContent, CustomException
+from api.v1.utils import UnprocessableContent, CustomException, PdfProcessingError, PdfImageExtractionError
 from api.v1.utils.helpers import _read_pdf, _open_pdf
 
 
@@ -40,7 +40,7 @@ async def extract_all(file: UploadFile) -> dict:
         doc = fitz.open(stream=content, filetype="pdf")
     except Exception as e:
         print(e)
-        raise CustomException(
+        raise PdfProcessingError(
             message="Something went wrong: could not process the PDF."
         )
 
@@ -69,7 +69,7 @@ async def extract_all(file: UploadFile) -> dict:
                 )
                 image_index += 1
             except Exception:
-                raise
+                raise PdfImageExtractionError(message="Could not extract image from PDF.")
 
         # Extract text blocks with their vertical position
         text_blocks = []

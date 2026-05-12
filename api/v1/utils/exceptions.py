@@ -35,6 +35,16 @@ class GatewayTimeoutException(CustomException):
     def __init__(self, message: str ="Upstream service timed out."):
         super().__init__(status.HTTP_504_GATEWAY_TIMEOUT, message)
 
+class PdfProcessingError(CustomException):
+    """Exception raised for errors during PDF processing."""
+    def __init__(self, message: str = "Could not process the PDF file."):
+        super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, message)
+
+class PdfImageExtractionError(CustomException):
+    """Exception raised for errors during image extraction from PDF."""
+    def __init__(self, message: str = "Could not extract image from PDF."):
+        super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, message)
+
 async def generic_exception_handler(request: Request, exc):
     """Handles unexpected exceptions, returning a 500 error."""
     print(f"Unexpected {type(exc).__name__}: {exc}")

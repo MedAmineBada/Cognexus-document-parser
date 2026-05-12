@@ -1,7 +1,7 @@
 import fitz
 from fastapi import UploadFile
 
-from api.v1.utils import CustomException, UnprocessableContent
+from api.v1.utils import CustomException, UnprocessableContent, PdfProcessingError
 
 
 def _open_pdf(content: bytes) -> fitz.Document:
@@ -11,7 +11,7 @@ def _open_pdf(content: bytes) -> fitz.Document:
     try:
         return fitz.open(stream=content, filetype="pdf")
     except Exception:
-        raise CustomException(
+        raise PdfProcessingError(
             message="Something went wrong: could not process the PDF."
         )
 
